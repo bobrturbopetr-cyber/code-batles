@@ -3,15 +3,97 @@
 <head>
   <meta charset="UTF-8">
   <title>CodeBattles</title>
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Базовые стили в духе Informatics */
+    body {
+      font-family: 'PT Sans', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+    }
+
+    .problem-card {
+      background: white;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+      border-left: 4px solid #3498db;
+    }
+
+    .problem-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .problem-difficulty {
+      color: #7f8c8d;
+      font-size: 0.9em;
+    }
+
+    .submit-form {
+      background: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 3px;
+    }
+  </style>
 </head>
 <body>
   <header>
     <div class="logo">CodeBattles</div>
     <nav>
-      <a href="contests.html">Соревнования</a>
-      <a href="problemset.html">Архив задач</a>
-      <a href="profile.html">Профиль</a>
+      <a href="#contests">Соревнования</a>
+      <a href="#problemset">Архив задач</a>
+      <a href="#profile">Профиль</a>
     </nav>
   </header>
 
@@ -19,14 +101,62 @@
     <h1>Добро пожаловать в CodeBattles!</h1>
     <p>Платформа для соревновательного программирования. Решай задачи, участвуй в контестах и повышай свой рейтинг!</p>
 
+    <!-- Карточка задачи -->
     <div class="problem-card">
       <div class="problem-title">Задача A. Сумма двух чисел</div>
       <div class="problem-difficulty">Сложность: 800</div>
-      <p>Дано два целых числа $a$ и $b$. Найдите их сумму.</p>
-      <a href="submit.html?id=1">Решить</a>
+      <p>Дано два целых числа $a$ и $b$ ($-10^9 \leq a, b \leq 10^9$). Найдите их сумму.</p>
+      <strong>Входные данные</strong>
+      <p>Первая строка содержит числа $a$ и $b$, разделённые пробелом.</p>
+      <strong>Выходные данные</strong>
+      <p>Выведите одно число — сумму $a + b$.</p>
+      <strong>Пример</strong>
+      <pre>Вход: 2 3
+Выход: 5</pre>
+    </div>
+
+    <!-- Форма отправки решения -->
+    <div class="submit-form">
+      <h2>Отправить решение</h2>
+      <select id="language">
+        <option value="cpp">C++</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+      </select>
+      <textarea id="code" rows="10" placeholder="Ваш код здесь..."></textarea>
+      <button onclick="submitSolution()">Отправить</button>
+      <div id="result"></div>
     </div>
   </div>
 
-  <script src="js/app.js"></script>
+  <script>
+    // Функция отправки решения
+    function submitSolution() {
+      const code = document.getElementById('code').value;
+      const language = document.getElementById('language').value;
+      const resultDiv = document.getElementById('result');
+
+      // Проверка на пустой код
+      if (!code.trim()) {
+        resultDiv.style.backgroundColor = '#ffeaea';
+        resultDiv.textContent = 'Ошибка: код не может быть пустым!';
+        return;
+      }
+
+      // Имитация проверки решения (случайный результат)
+      setTimeout(() => {
+        const outcomes = [
+          { text: 'OK', color: '#d4edda' },
+          { text: 'Wrong Answer', color: '#ffeaea' },
+          { text: 'Time Limit Exceeded', color: '#fff3cd' },
+          { text: 'Compilation Error', color: '#f8d7da' }
+        ];
+        const result = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+        resultDiv.style.backgroundColor = result.color;
+        resultDiv.textContent = `Результат: ${result.text}`;
+      }, 1000);
+    }
+  </script>
 </body>
 </html>
