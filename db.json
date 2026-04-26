@@ -1,0 +1,77 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "admin123",
+      "points": 520,
+      "solved": [1, 2, 4],
+      "avatar": "AD",
+      "registeredAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "username": "coder2024",
+      "password": "pass123",
+      "points": 310,
+      "solved": [1, 3],
+      "avatar": "CO",
+      "registeredAt": "2024-01-16T14:30:00Z"
+    },
+    {
+      "id": 3,
+      "username": "algo_master",
+      "password": "algo123",
+      "points": 450,
+      "solved": [1, 2, 3],
+      "avatar": "AM",
+      "registeredAt": "2024-01-17T09:15:00Z"
+    }
+  ],
+  "submissions": [
+    {
+      "id": 1,
+      "username": "admin",
+      "problemId": 1,
+      "status": "accepted",
+      "timestamp": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": 2,
+      "username": "coder2024",
+      "problemId": 1,
+      "status": "accepted",
+      "timestamp": "2024-01-16T15:00:00Z"
+    }
+  ],
+  "problems": [
+    { "id": 1, "title": "A + B", "description": "Даны два целых числа. Найдите сумму.", "difficulty": "easy", "points": 100, "testInput": "3 5", "expectedOutput": "8" },
+    { "id": 2, "title": "Четное или нечетное", "description": "Проверьте четность числа.", "difficulty": "easy", "points": 100, "testInput": "7", "expectedOutput": "нечетное" },
+    { "id": 3, "title": "Факториал", "description": "Вычислите факториал числа n (n ≤ 10).", "difficulty": "medium", "points": 200, "testInput": "5", "expectedOutput": "120" },
+    { "id": 4, "title": "Наибольшее число", "description": "Найдите максимум из трех чисел.", "difficulty": "medium", "points": 200, "testInput": "10 25 15", "expectedOutput": "25" },
+    { "id": 5, "title": "Сумма массива", "description": "Найдите сумму элементов массива.", "difficulty": "hard", "points": 300, "testInput": "3\n1 2 3", "expectedOutput": "6" }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "🚀 Запуск CodeBattles!",
+      "date": "2024-01-15",
+      "content": "Платформа официально запущена! Регистрируйтесь и решайте задачи.",
+      "author": "Peter Mashkov"
+    },
+    {
+      "id": 2,
+      "title": "🏆 Первый турнир",
+      "date": "2024-01-20",
+      "content": "Стартует еженедельный баттл! Призовой фонд — 5000 очков рейтинга.",
+      "author": "Admin"
+    },
+    {
+      "id": 3,
+      "title": "📊 Обновление рейтинга",
+      "date": "2024-01-25",
+      "content": "Таблица лидеров теперь обновляется в реальном времени.",
+      "author": "Peter Mashkov"
+    }
+  ]
+}
