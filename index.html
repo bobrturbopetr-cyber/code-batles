@@ -1,162 +1,447 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>CodeBattles</title>
-  <style>
-    /* Базовые стили в духе Informatics */
-    body {
-      font-family: 'PT Sans', Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 20px;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 20px;
-    }
-
-    .problem-card {
-      background: white;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      margin-bottom: 15px;
-      border-left: 4px solid #3498db;
-    }
-
-    .problem-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    .problem-difficulty {
-      color: #7f8c8d;
-      font-size: 0.9em;
-    }
-
-    .submit-form {
-      background: white;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    textarea, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 3px;
-    }
-
-    button {
-      background: #3498db;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-
-    #result {
-      margin-top: 15px;
-      padding: 10px;
-      border-radius: 3px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>CodeBattles | Официальная платформа | Петр Машков</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0A0D14;
+            font-family: 'Inter', sans-serif;
+            color: #E9EDF2;
+            line-height: 1.5;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #151E26; }
+        ::-webkit-scrollbar-thumb { background: #2E3A44; border-radius: 8px; }
+        .app { display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* NAVBAR */
+        .navbar {
+            background: #0C1018;
+            border-bottom: 1px solid #1E2A32;
+            padding: 0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #FFA559, #FF6E4A);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .logo span { font-size: 14px; background: none; color: #FFA559; -webkit-background-clip: unset; }
+        .nav-links { display: flex; gap: 28px; align-items: center; }
+        .nav-link {
+            color: #B9C7D9;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-link.active, .nav-link:hover { color: #FFA559; border-bottom-color: #FFA559; }
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #11171F;
+            padding: 6px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .user-name { font-weight: 600; font-size: 14px; }
+        .avatar { background: #2A3642; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #FFA559; }
+        
+        /* MAIN */
+        .main-container { display: flex; flex: 1; padding: 28px 32px; gap: 32px; max-width: 1600px; margin: 0 auto; width: 100%; }
+        .tasks-panel { flex: 2; min-width: 280px; }
+        .editor-panel { flex: 3; background: #0E131C; border-radius: 24px; border: 1px solid #222A33; overflow: hidden; display: flex; flex-direction: column; }
+        .rank-panel { flex: 1.2; min-width: 240px; }
+        
+        /* карточки задач */
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-card {
+            background: #0F151E;
+            border: 1px solid #1F2832;
+            border-radius: 18px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-card.active { background: #18222E; border-color: #FFA559; box-shadow: 0 0 0 1px #FFA559; }
+        .task-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .task-name { font-weight: 700; font-size: 18px; }
+        .task-difficulty { font-size: 12px; padding: 4px 12px; border-radius: 30px; background: #1E2A36; color: #FFD966; }
+        .task-stats { font-size: 13px; color: #8B9BB0; display: flex; gap: 16px; margin-top: 8px; }
+        .solved-badge { color: #4CAF7D; font-size: 12px; margin-left: 8px; }
+        
+        /* редактор */
+        .editor-header { padding: 16px 20px; background: #0B1017; border-bottom: 1px solid #1E2832; display: flex; justify-content: space-between; align-items: center; }
+        .lang-badge { background: #1E2A36; padding: 6px 14px; border-radius: 30px; font-size: 13px; font-family: monospace; }
+        .code-area { background: #0A0E15; padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 14px; border: none; resize: vertical; width: 100%; min-height: 280px; color: #D4E0F0; outline: none; line-height: 1.5; }
+        .action-buttons { display: flex; gap: 16px; padding: 16px 20px; border-top: 1px solid #1E2832; background: #0B1017; }
+        .btn { padding: 10px 20px; border-radius: 40px; border: none; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn-run { background: #2C3E66; color: white; }
+        .btn-run:hover { background: #3E5A8C; }
+        .btn-submit { background: #FFA559; color: #0A0D14; }
+        .btn-submit:hover { background: #FF8C32; }
+        .output-box { background: #080C12; padding: 14px 20px; font-family: monospace; font-size: 13px; border-top: 1px solid #1E2832; max-height: 160px; overflow: auto; white-space: pre-wrap; }
+        
+        /* рейтинг */
+        .rank-table { background: #0F151E; border-radius: 20px; border: 1px solid #222B34; overflow: hidden; }
+        .rank-row { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #1B232E; font-size: 14px; }
+        .rank-row.header { background: #0B1118; font-weight: 600; color: #BECDE0; }
+        .points { font-weight: 700; color: #FFD966; }
+        
+        /* модальное окно профиля */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; visibility: hidden; opacity: 0; transition: 0.2s; }
+        .modal.active { visibility: visible; opacity: 1; }
+        .modal-content { background: #121A24; border-radius: 32px; padding: 32px; width: 360px; border: 1px solid #2E3E4E; }
+        .modal-content input { width: 100%; padding: 12px; background: #1A2532; border: 1px solid #2F3E4E; border-radius: 20px; color: white; margin: 16px 0; font-size: 16px; }
+        .close-modal { float: right; cursor: pointer; font-size: 24px; }
+        
+        @media (max-width: 1000px) { .main-container { flex-direction: column; } }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="logo">CodeBattles</div>
-    <nav>
-      <a href="#contests">Соревнования</a>
-      <a href="#problemset">Архив задач</a>
-      <a href="#profile">Профиль</a>
-    </nav>
-  </header>
-
-  <div class="container">
-    <h1>Добро пожаловать в CodeBattles!</h1>
-    <p>Платформа для соревновательного программирования. Решай задачи, участвуй в контестах и повышай свой рейтинг!</p>
-
-    <!-- Карточка задачи -->
-    <div class="problem-card">
-      <div class="problem-title">Задача A. Сумма двух чисел</div>
-      <div class="problem-difficulty">Сложность: 800</div>
-      <p>Дано два целых числа $a$ и $b$ ($-10^9 \leq a, b \leq 10^9$). Найдите их сумму.</p>
-      <strong>Входные данные</strong>
-      <p>Первая строка содержит числа $a$ и $b$, разделённые пробелом.</p>
-      <strong>Выходные данные</strong>
-      <p>Выведите одно число — сумму $a + b$.</p>
-      <strong>Пример</strong>
-      <pre>Вход: 2 3
-Выход: 5</pre>
+<div class="app">
+    <div class="navbar">
+        <div class="logo">CODEBATTLES <span>by Peter Mashkov</span></div>
+        <div class="nav-links">
+            <div class="nav-link active" data-tab="battle">⚔️ Битвы</div>
+            <div class="nav-link" data-tab="rank">🏆 Рейтинг</div>
+        </div>
+        <div class="user-profile" id="profileBtn">
+            <div class="user-name" id="displayUsername">CodeMaster</div>
+            <div class="avatar" id="userAvatar">CM</div>
+        </div>
     </div>
 
-    <!-- Форма отправки решения -->
-    <div class="submit-form">
-      <h2>Отправить решение</h2>
-      <select id="language">
-        <option value="cpp">C++</option>
-        <option value="python">Python</option>
-        <option value="java">Java</option>
-      </select>
-      <textarea id="code" rows="10" placeholder="Ваш код здесь..."></textarea>
-      <button onclick="submitSolution()">Отправить</button>
-      <div id="result"></div>
+    <div class="main-container" id="mainContainer">
+        <!-- левая панель: задачи -->
+        <div class="tasks-panel" id="tasksPanel">
+            <div class="section-title"><i class="fas fa-code-branch"></i> Архив задач</div>
+            <div class="task-list" id="taskList"></div>
+        </div>
+
+        <!-- центр: редактор -->
+        <div class="editor-panel" id="editorPanel">
+            <div class="editor-header">
+                <strong><i class="fas fa-terminal"></i> Редактор решений</strong>
+                <div class="lang-badge">Python 3 (эмуляция)</div>
+            </div>
+            <textarea class="code-area" id="codeArea" rows="10">def solve(a, b):
+    return a + b
+
+# напишите решение под задачу</textarea>
+            <div class="action-buttons">
+                <button class="btn btn-run" id="runBtn"><i class="fas fa-play"></i> Запустить тест</button>
+                <button class="btn btn-submit" id="submitBtn"><i class="fas fa-check-circle"></i> Отправить решение</button>
+            </div>
+            <div class="output-box" id="outputBox">💡 Результат появится здесь после запуска...</div>
+        </div>
+
+        <!-- правая панель: рейтинг -->
+        <div class="rank-panel" id="rankPanel">
+            <div class="section-title"><i class="fas fa-trophy"></i> Таблица лидеров</div>
+            <div class="rank-table" id="rankTable"></div>
+        </div>
     </div>
-  </div>
+</div>
 
-  <script>
-    // Функция отправки решения
-    function submitSolution() {
-      const code = document.getElementById('code').value;
-      const language = document.getElementById('language').value;
-      const resultDiv = document.getElementById('result');
+<!-- модалка профиля -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeModalBtn">&times;</span>
+        <h3>👤 Профиль CodeBattles</h3>
+        <label>Ваше имя</label>
+        <input type="text" id="usernameInput" placeholder="Никнейм" maxlength="20">
+        <button id="saveProfileBtn" class="btn btn-submit" style="width:100%">Сохранить</button>
+    </div>
+</div>
 
-      // Проверка на пустой код
-      if (!code.trim()) {
-        resultDiv.style.backgroundColor = '#ffeaea';
-        resultDiv.textContent = 'Ошибка: код не может быть пустым!';
-        return;
-      }
+<script>
+    // ---------- ЗАДАЧИ ----------
+    const TASKS = [
+        { id: 1, name: "Сумма двух чисел", difficulty: "Легкая", points: 100, testInput: "3 5\n", expectedOutput: "8", checker: (codeOutput) => codeOutput.trim() === "8" },
+        { id: 2, name: "Четное или нечетное", difficulty: "Легкая", points: 120, testInput: "7\n", expectedOutput: "нечетное", checker: (out) => out.trim().toLowerCase().includes("нечет") },
+        { id: 3, name: "Факториал (n<10)", difficulty: "Средняя", points: 200, testInput: "5\n", expectedOutput: "120", checker: (out) => out.trim() === "120" },
+        { id: 4, name: "Поиск максимума", difficulty: "Средняя", points: 180, testInput: "4 9 2\n", expectedOutput: "9", checker: (out) => out.trim() === "9" },
+        { id: 5, name: "Сумма массива", difficulty: "Сложная", points: 250, testInput: "3\n10 20 30\n", expectedOutput: "60", checker: (out) => out.trim() === "60" }
+    ];
 
-      // Имитация проверки решения (случайный результат)
-      setTimeout(() => {
-        const outcomes = [
-          { text: 'OK', color: '#d4edda' },
-          { text: 'Wrong Answer', color: '#ffeaea' },
-          { text: 'Time Limit Exceeded', color: '#fff3cd' },
-          { text: 'Compilation Error', color: '#f8d7da' }
-        ];
-        const result = outcomes[Math.floor(Math.random() * outcomes.length)];
+    // Состояние: решённые задачи, общий счёт, имя, лидерборд
+    let solvedTasks = new Set();     // id задач
+    let userPoints = 0;
+    let currentUser = "CodeMaster";
+    let leaderboard = [];            // [{ name, points, solvedCount }]
+    let currentTaskId = 1;           // активная задача
 
-        resultDiv.style.backgroundColor = result.color;
-        resultDiv.textContent = `Результат: ${result.text}`;
-      }, 1000);
+    // ---- Функции сохранения в localStorage ----
+    function saveAllData() {
+        const data = {
+            solvedTasks: Array.from(solvedTasks),
+            userPoints: userPoints,
+            currentUser: currentUser,
+            leaderboard: leaderboard,
+            currentTaskId: currentTaskId
+        };
+        localStorage.setItem("codebattles_data", JSON.stringify(data));
     }
-  </script>
+
+    function loadAllData() {
+        const raw = localStorage.getItem("codebattles_data");
+        if (!raw) return;
+        try {
+            const data = JSON.parse(raw);
+            solvedTasks = new Set(data.solvedTasks || []);
+            userPoints = data.userPoints || 0;
+            currentUser = data.currentUser || "CodeMaster";
+            leaderboard = data.leaderboard || [];
+            currentTaskId = data.currentTaskId || 1;
+            syncLeaderboardWithUser(); // синхронизировать текущего юзера в лидерборде
+            renderAll();
+        } catch(e) { console.warn(e); }
+    }
+
+    // синхронизирует текущего пользователя в таблице рейтинга
+    function syncLeaderboardWithUser() {
+        let existing = leaderboard.find(u => u.name === currentUser);
+        const solvedCount = solvedTasks.size;
+        if (existing) {
+            existing.points = userPoints;
+            existing.solvedCount = solvedCount;
+        } else {
+            leaderboard.push({ name: currentUser, points: userPoints, solvedCount: solvedCount });
+        }
+        // сортировка по очкам
+        leaderboard.sort((a,b) => b.points - a.points);
+        saveAllData();
+    }
+
+    // обновить отображение задач + рейтинга
+    function renderTaskList() {
+        const container = document.getElementById("taskList");
+        if (!container) return;
+        container.innerHTML = TASKS.map(task => {
+            const isSolved = solvedTasks.has(task.id);
+            const solvedMark = isSolved ? '<span class="solved-badge"><i class="fas fa-check-circle"></i> решено</span>' : '';
+            const activeClass = (currentTaskId === task.id) ? 'active' : '';
+            return `<div class="task-card ${activeClass}" data-id="${task.id}">
+                        <div class="task-header">
+                            <span class="task-name">${task.name}</span>
+                            <span class="task-difficulty">${task.difficulty}</span>
+                        </div>
+                        <div class="task-stats">
+                            <span><i class="fas fa-star"></i> ${task.points} pts</span>
+                            ${solvedMark}
+                        </div>
+                    </div>`;
+        }).join('');
+        // вешаем обработчики
+        document.querySelectorAll('.task-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                const id = parseInt(card.dataset.id);
+                if (!isNaN(id)) {
+                    currentTaskId = id;
+                    renderTaskList();    // перерисовка для активного класса
+                    updateEditorForTask();
+                    saveAllData();
+                }
+            });
+        });
+    }
+
+    function updateEditorForTask() {
+        const task = TASKS.find(t => t.id === currentTaskId);
+        if (!task) return;
+        const defaultCode = `# Решение задачи: ${task.name}
+# Проверочный тест ожидает вывод: ${task.expectedOutput}
+def main():
+    data = input().strip()
+    # Ваш код здесь:
+    # пример для суммы чисел:
+    if ' ' in data:
+        nums = list(map(int, data.split()))
+        print(sum(nums))
+    else:
+        print(int(data) * 2 if int(data) > 5 else int(data) + 1)
+
+if __name__ == "__main__":
+    main()`;
+        const area = document.getElementById("codeArea");
+        if (area && area.value.trim() === "" || area.value.includes("напишите решение")) {
+            area.value = defaultCode;
+        }
+    }
+
+    // Эмуляция запуска python-кода (безопасная eval-симуляция для тестов)
+    function runCodeSimulation(code, inputData) {
+        // Создаем перехват print и input
+        let output = "";
+        let inputLines = inputData.split("\n").filter(l => l.trim() !== "");
+        let inputIndex = 0;
+        const mockInput = () => {
+            if (inputIndex < inputLines.length) return inputLines[inputIndex++];
+            return "";
+        };
+        const mockPrint = (...args) => {
+            output += args.map(arg => String(arg)).join(" ") + "\n";
+        };
+        // wrap code in a function
+        try {
+            const asyncEval = new Function('input', 'print', code + '\n//@ sourceURL=dynamic');
+            asyncEval(mockInput, mockPrint);
+        } catch(e) {
+            return "Ошибка выполнения: " + e.message;
+        }
+        return output.trim();
+    }
+
+    function runCurrentTaskCode() {
+        const task = TASKS.find(t => t.id === currentTaskId);
+        if (!task) return "Задача не найдена";
+        const code = document.getElementById("codeArea").value;
+        const testInput = task.testInput;
+        const result = runCodeSimulation(code, testInput);
+        document.getElementById("outputBox").innerHTML = `<i class="fas fa-vial"></i> Тестовый запуск (вход: ${testInput.replace(/\n/g, '\\n')})<br>👉 Результат: ${result}`;
+        return result;
+    }
+
+    function submitSolution() {
+        const task = TASKS.find(t => t.id === currentTaskId);
+        if (!task) return;
+        if (solvedTasks.has(task.id)) {
+            document.getElementById("outputBox").innerHTML = "⚠️ Задача уже решена! Очки не начисляются.";
+            return;
+        }
+        const code = document.getElementById("codeArea").value;
+        const testInput = task.testInput;
+        const outputRaw = runCodeSimulation(code, testInput);
+        const isCorrect = task.checker(outputRaw);
+        if (isCorrect) {
+            // начисляем очки
+            solvedTasks.add(task.id);
+            userPoints += task.points;
+            syncLeaderboardWithUser();
+            renderTaskList();
+            renderLeaderboard();
+            document.getElementById("outputBox").innerHTML = `✅ ПОБЕДА! Задача "${task.name}" решена верно! +${task.points} очков.`;
+            updateProfileUI();
+            saveAllData();
+        } else {
+            document.getElementById("outputBox").innerHTML = `❌ Ошибка! Ожидалось: ${task.expectedOutput}, получено: ${outputRaw.slice(0,200)}. Попробуйте ещё.`;
+        }
+    }
+
+    function renderLeaderboard() {
+        const container = document.getElementById("rankTable");
+        if (!container) return;
+        const top10 = leaderboard.slice(0, 8);
+        let html = `<div class="rank-row header"><span>Игрок</span><span>Очки</span><span>Решено</span></div>`;
+        top10.forEach((user, idx) => {
+            html += `<div class="rank-row"><span><strong>${idx+1}</strong> ${user.name}</span><span class="points">${user.points}</span><span>${user.solvedCount || 0}</span></div>`;
+        });
+        if (top10.length === 0) html += `<div class="rank-row"><span>Пока нет участников</span></div>`;
+        container.innerHTML = html;
+    }
+
+    function updateProfileUI() {
+        const nameSpan = document.getElementById("displayUsername");
+        const avatarDiv = document.getElementById("userAvatar");
+        if (nameSpan) nameSpan.innerText = currentUser;
+        if (avatarDiv) avatarDiv.innerText = currentUser.slice(0,2).toUpperCase();
+    }
+
+    function renderAll() {
+        renderTaskList();
+        renderLeaderboard();
+        updateProfileUI();
+    }
+
+    // модалка
+    const modal = document.getElementById("profileModal");
+    const profileBtn = document.getElementById("profileBtn");
+    const closeModal = document.getElementById("closeModalBtn");
+    const saveProfile = document.getElementById("saveProfileBtn");
+    const usernameInput = document.getElementById("usernameInput");
+
+    function openProfileModal() {
+        usernameInput.value = currentUser;
+        modal.classList.add("active");
+    }
+    profileBtn?.addEventListener("click", openProfileModal);
+    closeModal?.addEventListener("click", () => modal.classList.remove("active"));
+    saveProfile?.addEventListener("click", () => {
+        let newName = usernameInput.value.trim();
+        if (newName.length === 0) newName = "Warrior";
+        if (newName !== currentUser) {
+            // удаляем старого из leaderboard, добавляем нового
+            leaderboard = leaderboard.filter(u => u.name !== currentUser);
+            currentUser = newName;
+            syncLeaderboardWithUser();
+            updateProfileUI();
+            renderLeaderboard();
+            saveAllData();
+        }
+        modal.classList.remove("active");
+    });
+    window.addEventListener("click", (e) => { if (e.target === modal) modal.classList.remove("active"); });
+
+    // вкладки (битвы/рейтинг)
+    document.querySelectorAll(".nav-link").forEach(link => {
+        link.addEventListener("click", (e) => {
+            const tab = link.dataset.tab;
+            document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+            if (tab === "rank") {
+                document.getElementById("tasksPanel").style.display = "none";
+                document.getElementById("rankPanel").style.display = "block";
+                document.getElementById("editorPanel").style.width = "100%";
+            } else {
+                document.getElementById("tasksPanel").style.display = "block";
+                document.getElementById("rankPanel").style.display = "block";
+                document.getElementById("editorPanel").style.width = "";
+            }
+        });
+    });
+
+    // обработчики кнопок
+    document.getElementById("runBtn")?.addEventListener("click", () => runCurrentTaskCode());
+    document.getElementById("submitBtn")?.addEventListener("click", () => submitSolution());
+
+    // инициализация
+    loadAllData();
+    if (leaderboard.length === 0) {
+        // демо-тестовые боты для красоты, но они не мешают настоящей системе
+        leaderboard.push({ name: "AlphaCoder", points: 450, solvedCount: 3 });
+        leaderboard.push({ name: "ByteRider", points: 320, solvedCount: 2 });
+        leaderboard.push({ name: currentUser, points: userPoints, solvedCount: solvedTasks.size });
+        leaderboard.sort((a,b)=>b.points-a.points);
+        saveAllData();
+    }
+    syncLeaderboardWithUser();
+    renderAll();
+    updateEditorForTask();
+    saveAllData();
+</script>
 </body>
 </html>
