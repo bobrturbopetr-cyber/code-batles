@@ -1,0 +1,51 @@
+{
+  "users": [],
+  "submissions": [],
+  "problems": [
+    {
+      "id": 1,
+      "title": "A + B",
+      "description": "Даны два целых числа A и B. Найдите их сумму.",
+      "difficulty": "easy",
+      "points": 100,
+      "testInput": "3 5",
+      "expectedOutput": "8"
+    },
+    {
+      "id": 2,
+      "title": "Четное или нечетное",
+      "description": "Проверьте, является ли число четным.",
+      "difficulty": "easy",
+      "points": 100,
+      "testInput": "7",
+      "expectedOutput": "нечетное"
+    },
+    {
+      "id": 3,
+      "title": "Факториал",
+      "description": "Вычислите факториал числа n (n ≤ 10).",
+      "difficulty": "medium",
+      "points": 200,
+      "testInput": "5",
+      "expectedOutput": "120"
+    },
+    {
+      "id": 4,
+      "title": "Наибольшее число",
+      "description": "Найдите максимальное из трех чисел.",
+      "difficulty": "medium",
+      "points": 200,
+      "testInput": "10 25 15",
+      "expectedOutput": "25"
+    },
+    {
+      "id": 5,
+      "title": "Сумма массива",
+      "description": "Найдите сумму элементов массива.",
+      "difficulty": "hard",
+      "points": 300,
+      "testInput": "3\n1 2 3",
+      "expectedOutput": "6"
+    }
+  ]
+}
