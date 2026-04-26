@@ -2,9 +2,11 @@ name = "codebattles-api"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
-[vars]
-GITHUB_OWNER = "bobrturbopetr-cyber"
-GITHUB_REPO = "code-batles"
+[[kv_namespaces]]
+binding = "CODEBATTLES_KV"
+id = "YOUR_KV_ID"
 
 [env.production]
-vars = { GITHUB_OWNER = "bobrturbopetr-cyber", GITHUB_REPO = "code-batles" }
+kv_namespaces = [
+  { binding = "CODEBATTLES_KV", id = "YOUR_KV_ID" }
+]
