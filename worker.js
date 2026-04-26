@@ -1,19 +1,18 @@
 // Cloudflare Worker для CodeBattles
-// Хранилище данных в GitHub репозитории
+// Использует KV Storage для хранения данных
 
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const path = url.pathname;
     
-    // CORS заголовки для доступа с любого источника
+    // CORS заголовки
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Headers': 'Content-Type',
     };
     
-    // Обработка preflight запросов
     if (request.method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders });
     }
@@ -21,36 +20,33 @@ export default {
     // Получить все данные
     if (path === '/api/data' && request.method === 'GET') {
       try {
-        const response = await fetch(
-          `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/data/db.json`,
-          {
-            headers: {
-              'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          }
-        );
-        
-        if (response.ok) {
-          const data = await response.json();
-          const content = JSON.parse(atob(data.content));
-          return new Response(JSON.stringify(content), {
+        const data = await env.CODEBATTLES_KV.get('global_data', 'json');
+        if (data) {
+          return new Response(JSON.stringify(data), {
             headers: { 'Content-Type': 'application/json', ...corsHeaders }
           });
         } else {
-          // Если файла нет, создаём пустую базу
-          const emptyDb = {
-            users: [],
+          // Начальные данные
+          const defaultData = {
+            users: [
+              { id: 1, username: "admin", password: "admin123", avatar: "AD", points: 580, solved: [1,2,4], rating: 1120 },
+              { id: 2, username: "petya", password: "123", avatar: "PM", points: 210, solved: [1], rating: 890 }
+            ],
             submissions: [],
             problems: [
-              { id: 1, title: "A + B", difficulty: "easy", points: 100, testInput: "3 5", expectedOutput: "8", description: "Даны A и B. Выведите A+B." },
-              { id: 2, title: "Четное или нечетное", difficulty: "easy", points: 100, testInput: "7", expectedOutput: "нечетное", description: "Определите, четное число или нет." },
-              { id: 3, title: "Факториал", difficulty: "medium", points: 200, testInput: "5", expectedOutput: "120", description: "Вычислите n! (n ≤ 10)." },
-              { id: 4, title: "Максимум трёх", difficulty: "medium", points: 200, testInput: "10 25 15", expectedOutput: "25", description: "Найдите наибольшее из трёх чисел." },
-              { id: 5, title: "Сумма массива", difficulty: "hard", points: 300, testInput: "3\n1 2 3", expectedOutput: "6", description: "Найдите сумму элементов массива." }
+              { id:1, title:"A + B", difficulty:"easy", points:100, testInput:"3 5", expectedOutput:"8", description:"Даны два целых числа A и B. Найдите их сумму." },
+              { id:2, title:"Четное или нечетное", difficulty:"easy", points:100, testInput:"7", expectedOutput:"нечетное", description:"Проверьте, является ли число четным." },
+              { id:3, title:"Факториал", difficulty:"medium", points:200, testInput:"5", expectedOutput:"120", description:"Вычислите факториал числа n (n ≤ 10)." },
+              { id:4, title:"Максимум трех", difficulty:"medium", points:200, testInput:"10 25 15", expectedOutput:"25", description:"Найдите наибольшее из трех чисел." },
+              { id:5, title:"Сумма массива", difficulty:"hard", points:300, testInput:"3\n1 2 3", expectedOutput:"6", description:"Найдите сумму элементов массива." }
+            ],
+            news: [
+              { title:"Добро пожаловать в CodeBattles!", date:"15.04.2025", content:"Платформа для настоящих баталий кода." },
+              { title:"Первый турнир", date:"18.04.2025", content:"Соревнование на 1000 очков рейтинга." }
             ]
           };
-          return new Response(JSON.stringify(emptyDb), {
+          await env.CODEBATTLES_KV.put('global_data', JSON.stringify(defaultData));
+          return new Response(JSON.stringify(defaultData), {
             headers: { 'Content-Type': 'application/json', ...corsHeaders }
           });
         }
@@ -66,54 +62,10 @@ export default {
     if (path === '/api/data' && request.method === 'POST') {
       try {
         const newData = await request.json();
-        
-        // Получаем текущий файл чтобы получить SHA
-        const fileResponse = await fetch(
-          `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/data/db.json`,
-          {
-            headers: {
-              'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
-              'Accept': 'application/vnd.github.v3+json'
-            }
-          }
-        );
-        
-        let sha = null;
-        if (fileResponse.ok) {
-          const fileData = await fileResponse.json();
-          sha = fileData.sha;
-        }
-        
-        // Подготавливаем запрос на обновление/создание
-        const body = {
-          message: 'Update database via Cloudflare Worker',
-          content: btoa(JSON.stringify(newData, null, 2))
-        };
-        if (sha) body.sha = sha;
-        
-        const updateResponse = await fetch(
-          `https://api.github.com/repos/${env.GITHUB_OWNER}/${env.GITHUB_REPO}/contents/data/db.json`,
-          {
-            method: 'PUT',
-            headers: {
-              'Authorization': `Bearer ${env.GITHUB_TOKEN}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-          }
-        );
-        
-        if (updateResponse.ok) {
-          return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders }
-          });
-        } else {
-          const errorData = await updateResponse.text();
-          return new Response(JSON.stringify({ error: errorData }), {
-            status: updateResponse.status,
-            headers: { ...corsHeaders }
-          });
-        }
+        await env.CODEBATTLES_KV.put('global_data', JSON.stringify(newData));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders }
+        });
       } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), {
           status: 500,
@@ -122,117 +74,81 @@ export default {
       }
     }
     
-    // Регистрация/авторизация пользователя
-    if (path === '/api/auth/register' && request.method === 'POST') {
-      const { username, avatar } = await request.json();
+    // Регистрация/вход
+    if (path === '/api/auth' && request.method === 'POST') {
+      const { username, password, action } = await request.json();
+      const data = await env.CODEBATTLES_KV.get('global_data', 'json');
       
-      // Получаем текущие данные
-      const dataResponse = await fetch(`${url.origin}/api/data`, {
-        headers: { 'Authorization': request.headers.get('Authorization') || '' }
-      });
-      const data = await dataResponse.json();
-      
-      // Проверяем, существует ли пользователь
-      let user = data.users.find(u => u.username === username);
-      if (!user) {
-        user = {
-          id: Date.now(),
-          username: username,
-          avatar: avatar || username.slice(0,2).toUpperCase(),
-          points: 0,
-          solved: [],
-          rating: 1000,
-          registeredAt: new Date().toISOString()
-        };
-        data.users.push(user);
-        
-        // Сохраняем обновлённые данные
-        await fetch(`${url.origin}/api/data`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
+      if (action === 'login') {
+        const user = data.users.find(u => u.username === username && u.password === password);
+        if (user) {
+          const { password, ...safeUser } = user;
+          return new Response(JSON.stringify({ success: true, user: safeUser }), {
+            headers: { 'Content-Type': 'application/json', ...corsHeaders }
+          });
+        }
+        return new Response(JSON.stringify({ success: false, error: 'Неверные данные' }), {
+          status: 401,
+          headers: { ...corsHeaders }
         });
       }
       
-      return new Response(JSON.stringify({ success: true, user: user }), {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
+      if (action === 'register') {
+        if (data.users.find(u => u.username === username)) {
+          return new Response(JSON.stringify({ success: false, error: 'Пользователь уже существует' }), {
+            status: 400,
+            headers: { ...corsHeaders }
+          });
+        }
+        const newUser = {
+          id: Date.now(),
+          username,
+          password,
+          avatar: username.slice(0,2).toUpperCase(),
+          points: 0,
+          solved: [],
+          rating: 1000
+        };
+        data.users.push(newUser);
+        await env.CODEBATTLES_KV.put('global_data', JSON.stringify(data));
+        const { password: _, ...safeUser } = newUser;
+        return new Response(JSON.stringify({ success: true, user: safeUser }), {
+          headers: { ...corsHeaders }
+        });
+      }
     }
     
-    // Обновление пользователя (очки, решённые задачи)
+    // Обновить пользователя (после решения задачи)
     if (path === '/api/user/update' && request.method === 'POST') {
-      const { username, points, solved, problemId } = await request.json();
-      
-      const dataResponse = await fetch(`${url.origin}/api/data`);
-      const data = await dataResponse.json();
-      
-      const userIndex = data.users.findIndex(u => u.username === username);
+      const { id, points, solved } = await request.json();
+      const data = await env.CODEBATTLES_KV.get('global_data', 'json');
+      const userIndex = data.users.findIndex(u => u.id === id);
       if (userIndex !== -1) {
         if (points !== undefined) data.users[userIndex].points = points;
         if (solved !== undefined) data.users[userIndex].solved = solved;
-        if (problemId && !data.users[userIndex].solved.includes(problemId)) {
-          data.users[userIndex].solved.push(problemId);
-        }
-        
-        // Добавляем запись о решении
-        if (problemId) {
-          data.submissions.push({
-            username: username,
-            problemId: problemId,
-            status: 'accepted',
-            timestamp: new Date().toISOString()
-          });
-        }
-        
-        await fetch(`${url.origin}/api/data`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data)
-        });
-        
-        return new Response(JSON.stringify({ success: true, user: data.users[userIndex] }), {
-          headers: { 'Content-Type': 'application/json', ...corsHeaders }
+        await env.CODEBATTLES_KV.put('global_data', JSON.stringify(data));
+        return new Response(JSON.stringify({ success: true }), {
+          headers: { ...corsHeaders }
         });
       }
-      
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
         headers: { ...corsHeaders }
       });
     }
     
-    // Получить рейтинг
+    // Рейтинг
     if (path === '/api/leaderboard' && request.method === 'GET') {
-      const dataResponse = await fetch(`${url.origin}/api/data`);
-      const data = await dataResponse.json();
-      
+      const data = await env.CODEBATTLES_KV.get('global_data', 'json');
       const leaderboard = data.users
         .sort((a, b) => b.points - a.points)
-        .map((u, i) => ({
-          rank: i + 1,
-          username: u.username,
-          points: u.points,
-          solved: u.solved.length,
-          avatar: u.avatar
-        }));
-      
+        .map((u, i) => ({ rank: i+1, username: u.username, points: u.points, solved: u.solved.length }));
       return new Response(JSON.stringify(leaderboard), {
         headers: { 'Content-Type': 'application/json', ...corsHeaders }
       });
     }
     
-    // Получить задачи
-    if (path === '/api/problems' && request.method === 'GET') {
-      const dataResponse = await fetch(`${url.origin}/api/data`);
-      const data = await dataResponse.json();
-      
-      return new Response(JSON.stringify(data.problems || []), {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders }
-      });
-    }
-    
-    // Корневой эндпоинт
-    return new Response('CodeBattles API v1.0 - Worker is running!', {
+    return new Response('CodeBattles API v2.0 - Работает!', {
       headers: { ...corsHeaders }
     });
   }
