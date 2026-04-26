@@ -3,46 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeBattles | Глобальная платформа</title>
+    <title>CodeBattles | Платформа для программистов</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a2e; color: #eee; }
-        .header { background: linear-gradient(135deg, #0f0f23 0%, #16213e 100%); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; border-bottom: 3px solid #e94560; }
-        .logo { font-size: 28px; font-weight: bold; }
-        .logo span { color: #e94560; }
-        .nav-links { display: flex; gap: 10px; }
-        .nav-link { color: white; padding: 8px 18px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { background: #e94560; }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #e94560; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .login-btn, .logout-btn { background: #e94560; border: none; padding: 8px 20px; border-radius: 25px; color: white; font-weight: bold; cursor: pointer; }
-        .container { max-width: 1400px; margin: 20px auto; padding: 0 20px; }
-        .page { display: none; }
-        .page.active { display: block; }
-        .problem-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
-        .problem-card { background: #16213e; border-radius: 12px; padding: 20px; cursor: pointer; transition: 0.2s; border-left: 4px solid #e94560; }
-        .problem-card.solved { border-left-color: #2ecc71; background: #1a2a3a; }
-        .problem-card:hover { transform: translateY(-3px); }
-        .difficulty { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; margin: 8px 0; }
-        .easy { background: #2ecc71; color: #1a1a2e; }
-        .medium { background: #f39c12; color: #1a1a2e; }
-        .hard { background: #e74c3c; color: white; }
-        .editor-panel { background: #16213e; border-radius: 12px; padding: 25px; margin-top: 20px; }
-        textarea { width: 100%; padding: 15px; background: #0f0f23; border: 1px solid #2a2a4a; border-radius: 8px; color: white; font-family: monospace; margin: 10px 0; }
-        .btn-submit, .btn-run { padding: 10px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-right: 10px; }
-        .btn-submit { background: #2ecc71; color: #1a1a2e; }
-        .btn-run { background: #3498db; color: white; }
-        .rank-table { background: #16213e; border-radius: 12px; overflow: hidden; margin-top: 20px; }
-        .rank-row { display: grid; grid-template-columns: 60px 1fr 100px 100px; padding: 12px 20px; border-bottom: 1px solid #2a2a4a; }
-        .rank-row.header { background: #e94560; color: white; font-weight: bold; }
-        .stat-card { background: #16213e; padding: 20px; border-radius: 12px; text-align: center; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
-        .news-card { background: #16213e; padding: 20px; border-radius: 12px; margin-bottom: 15px; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: #16213e; padding: 30px; border-radius: 16px; width: 350px; }
-        .modal-content input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: none; }
-        @media (max-width: 700px) { .header { flex-direction: column; text-align: center; } .rank-row { grid-template-columns: 40px 1fr 70px 70px; font-size: 12px; } }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+            background: #e8edf2;
+            color: #2c3e50;
+        }
+
+        /* HEADER - сине-серый как Informatics */
+        .header {
+            background: #2c3e50;
+            border-bottom: 3px solid #1abc9c;
+            padding: 12px 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ecf0f1;
+        }
+
+        .logo span {
+            color: #1abc9c;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            color: #ecf0f1;
+            padding: 8px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #1abc9c;
+            color: #2c3e50;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #1a252f;
+            padding: 5px 16px;
+            border-radius: 40px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #1abc9c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .login-btn, .logout-btn {
+            background: #1abc9c;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 25px;
+            color: #2c3e50;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-btn:hover, .logout-btn:hover {
+            background: #16a085;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Карточки задач */
+        .problem-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .problem-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            border-left: 4px solid #1abc9c;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .problem-card.solved {
+            border-left-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+
+        .difficulty {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+        .easy { background: #d4edda; color: #155724; }
+        .medium { background: #fff3cd; color: #856404; }
+        .hard { background: #f8d7da; color: #721c24; }
+
+        /* Редактор */
+        .editor-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .problem-description {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 10px 0;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #1abc9c;
+        }
+
+        .btn-submit, .btn-run {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: 0.2s;
+        }
+
+        .btn-submit {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-run {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-submit:hover, .btn-run:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        /* Рейтинг */
+        .rank-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .rank-row {
+            display: grid;
+            grid-template-columns: 60px 1fr 100px 100px;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .rank-row.header {
+            background: #2c3e50;
+            color: white;
+            font-weight: bold;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .news-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        /* Модальные окна */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            width: 420px;
+            max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: #1abc9c;
+        }
+
+        .modal-content button {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .success-msg {
+            color: #27ae60;
+            font-size: 13px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .header { flex-direction: column; text-align: center; }
+            .rank-row { grid-template-columns: 40px 1fr 70px 70px; font-size: 12px; }
+        }
     </style>
 </head>
 <body>
@@ -64,33 +342,36 @@
 </div>
 
 <div class="container">
-    <div id="homePage" class="page active"><div id="homeContent"></div></div>
+    <div id="homePage" class="page"><div id="homeContent"></div></div>
     <div id="problemsPage" class="page"><div id="problemsContent"></div></div>
     <div id="newsPage" class="page"><div id="newsContent"></div></div>
     <div id="ratingPage" class="page"><div id="ratingContent"></div></div>
 </div>
 
+<!-- Модалка входа -->
 <div id="loginModal" class="modal" style="display:none;">
     <div class="modal-content">
-        <h3>Вход в CodeBattles</h3>
-        <input type="text" id="loginUsername" placeholder="Имя пользователя">
+        <h3><i class="fas fa-sign-in-alt"></i> Вход в CodeBattles</h3>
+        <input type="email" id="loginEmail" placeholder="Email">
         <input type="password" id="loginPassword" placeholder="Пароль">
-        <button class="btn-submit" onclick="login()" style="width:100%; margin:5px 0;">Войти</button>
-        <button class="btn-run" onclick="showRegister()" style="width:100%; margin:5px 0;">Регистрация</button>
-        <button onclick="closeLoginModal()" style="width:100%; margin:5px 0; padding:8px;">Отмена</button>
-        <div id="loginMsg" style="color:#e74c3c; margin-top:10px; text-align:center;"></div>
+        <button class="btn-submit" onclick="login()" style="width:100%;">Войти</button>
+        <button class="btn-run" onclick="switchToRegister()" style="width:100%; background:#6c757d;">Создать аккаунт</button>
+        <button onclick="closeLoginModal()" style="width:100%; background:#e0e0e0; color:#333;">Отмена</button>
+        <div id="loginMsg" class="error-msg"></div>
     </div>
 </div>
 
-<div id="registerModal" class="modal" style="display:none;">
+<!-- Модалка регистрации (открывается сразу при заходе) -->
+<div id="registerModal" class="modal" style="display:flex;">
     <div class="modal-content">
-        <h3>Регистрация</h3>
-        <input type="text" id="regUsername" placeholder="Имя пользователя">
-        <input type="password" id="regPassword" placeholder="Пароль">
+        <h3><i class="fas fa-user-plus"></i> Регистрация в CodeBattles</h3>
+        <input type="text" id="regName" placeholder="Имя пользователя (никнейм)">
+        <input type="email" id="regEmail" placeholder="Email">
+        <input type="password" id="regPassword" placeholder="Пароль (мин. 6 символов)">
         <input type="password" id="regConfirm" placeholder="Подтвердите пароль">
-        <button class="btn-submit" onclick="register()" style="width:100%; margin:5px 0;">Зарегистрироваться</button>
-        <button onclick="closeRegisterModal()" style="width:100%; margin:5px 0; padding:8px;">Назад</button>
-        <div id="regMsg" style="color:#e74c3c; margin-top:10px; text-align:center;"></div>
+        <button class="btn-submit" onclick="register()" style="width:100%;">Зарегистрироваться</button>
+        <button class="btn-run" onclick="switchToLogin()" style="width:100%; background:#6c757d;">Уже есть аккаунт? Войти</button>
+        <div id="regMsg" class="error-msg"></div>
     </div>
 </div>
 
@@ -109,17 +390,20 @@
             });
             const data = await response.json();
             globalData = data.record;
-            if (!globalData.users) initDefaultData();
-            console.log("✅ Данные загружены из облака");
-        } catch(error) { initDefaultData(); }
+            if (!globalData || !globalData.users) {
+                initDefaultData();
+                await saveGlobalData();
+            }
+            console.log("✅ Данные загружены, пользователей:", globalData.users.length);
+        } catch(error) {
+            console.log("Ошибка загрузки, создаю новые данные");
+            initDefaultData();
+        }
     }
     
     function initDefaultData() {
         globalData = {
-            users: [
-                { id: 1, username: "admin", password: "admin", avatar: "AD", points: 580, solved: [1,2,4], rating: 1120 },
-                { id: 2, username: "petya", password: "123", avatar: "PE", points: 210, solved: [1], rating: 890 }
-            ],
+            users: [],
             submissions: [],
             problems: [
                 { id:1, title:"A + B", difficulty:"easy", points:100, testInput:"3 5", expectedOutput:"8", description:"Даны два числа. Найдите их сумму." },
@@ -130,61 +414,117 @@
             ],
             news: [
                 { title:"🎉 Добро пожаловать в CodeBattles!", date:"Сегодня", content:"Платформа запущена! Регистрируйтесь и решайте задачи." },
-                { title:"🏆 Глобальный рейтинг", date:"Сегодня", content:"Все пользователи видят общую таблицу лидеров." }
+                { title:"🏆 Глобальный рейтинг", date:"Сегодня", content:"Все пользователи видят общую таблицу лидеров." },
+                { title:"⚔️ Битвы кода", date:"Сегодня", content:"Решайте задачи и поднимайтесь в топ!" }
             ]
         };
     }
     
     async function saveGlobalData() {
+        if (!globalData) return;
         try {
             await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_KEY },
                 body: JSON.stringify(globalData)
             });
-        } catch(e) { console.log(e); }
+            console.log("💾 Данные сохранены");
+        } catch(e) { console.log("Ошибка сохранения", e); }
     }
     
-    function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+    function openLoginModal() { 
+        document.getElementById('loginModal').style.display = 'flex';
+        document.getElementById('registerModal').style.display = 'none';
+    }
     function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
-    function showRegister() { closeLoginModal(); document.getElementById('registerModal').style.display = 'flex'; }
     function closeRegisterModal() { document.getElementById('registerModal').style.display = 'none'; }
+    function switchToRegister() { closeLoginModal(); document.getElementById('registerModal').style.display = 'flex'; }
+    function switchToLogin() { closeRegisterModal(); document.getElementById('loginModal').style.display = 'flex'; }
     
     async function login() {
-        const username = document.getElementById('loginUsername').value.trim();
+        const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
-        const user = globalData.users.find(u => u.username === username && u.password === password);
+        
+        if (!globalData || !globalData.users) {
+            await loadGlobalData();
+        }
+        
+        const user = globalData.users.find(u => u.email === email && u.password === password);
         if (user) {
             currentUser = JSON.parse(JSON.stringify(user));
             delete currentUser.password;
             closeLoginModal();
             updateUI();
             renderAll();
-        } else { document.getElementById('loginMsg').innerHTML = 'Неверный логин или пароль!'; }
+            document.getElementById('loginMsg').innerHTML = '';
+        } else {
+            document.getElementById('loginMsg').innerHTML = '❌ Неверный email или пароль!';
+        }
     }
     
     async function register() {
-        const username = document.getElementById('regUsername').value.trim();
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
         const password = document.getElementById('regPassword').value;
         const confirm = document.getElementById('regConfirm').value;
-        if (!username || !password) { document.getElementById('regMsg').innerHTML = 'Заполните все поля!'; return; }
-        if (password !== confirm) { document.getElementById('regMsg').innerHTML = 'Пароли не совпадают!'; return; }
-        if (globalData.users.find(u => u.username === username)) { document.getElementById('regMsg').innerHTML = 'Пользователь уже существует!'; return; }
         
-        const newUser = { id: Date.now(), username, password, avatar: username.slice(0,2).toUpperCase(), points: 0, solved: [], rating: 1000 };
+        if (!name || !email || !password) {
+            document.getElementById('regMsg').innerHTML = '❌ Заполните все поля!';
+            return;
+        }
+        if (password.length < 6) {
+            document.getElementById('regMsg').innerHTML = '❌ Пароль должен быть не менее 6 символов!';
+            return;
+        }
+        if (password !== confirm) {
+            document.getElementById('regMsg').innerHTML = '❌ Пароли не совпадают!';
+            return;
+        }
+        
+        if (!globalData || !globalData.users) {
+            await loadGlobalData();
+        }
+        
+        if (globalData.users.find(u => u.email === email)) {
+            document.getElementById('regMsg').innerHTML = '❌ Пользователь с таким email уже существует!';
+            return;
+        }
+        if (globalData.users.find(u => u.name === name)) {
+            document.getElementById('regMsg').innerHTML = '❌ Пользователь с таким именем уже существует!';
+            return;
+        }
+        
+        const newUser = {
+            id: Date.now(),
+            name: name,
+            email: email,
+            password: password,
+            avatar: name.slice(0,2).toUpperCase(),
+            points: 0,
+            solved: [],
+            rating: 1000,
+            registeredAt: new Date().toISOString()
+        };
         globalData.users.push(newUser);
         await saveGlobalData();
+        
         currentUser = JSON.parse(JSON.stringify(newUser));
         delete currentUser.password;
         closeRegisterModal();
         updateUI();
         renderAll();
+        document.getElementById('regMsg').innerHTML = '✅ Регистрация успешна!';
     }
     
-    function logout() { currentUser = null; updateUI(); renderAll(); }
+    function logout() {
+        currentUser = null;
+        updateUI();
+        renderAll();
+    }
+    
     function updateUI() {
         if (currentUser) {
-            document.getElementById('userName').innerText = currentUser.username;
+            document.getElementById('userName').innerText = currentUser.name;
             document.getElementById('userAvatar').innerText = currentUser.avatar;
             document.getElementById('loginBtn').style.display = 'none';
             document.getElementById('logoutBtn').style.display = 'inline-block';
@@ -199,6 +539,7 @@
     let selectedProblem = null;
     
     function renderHome() {
+        if (!globalData) return;
         document.getElementById('homeContent').innerHTML = `
             <h1>Добро пожаловать в CodeBattles!</h1>
             <div class="stats-grid">
@@ -206,17 +547,18 @@
                 <div class="stat-card"><i class="fas fa-check-circle fa-2x"></i><h3>${globalData.submissions.length}</h3><p>решено задач</p></div>
                 <div class="stat-card"><i class="fas fa-trophy fa-2x"></i><h3>${Math.max(...globalData.users.map(u=>u.points),0)}</h3><p>макс очков</p></div>
             </div>
-            ${currentUser ? `<div class="stat-card"><h3>Ваш профиль</h3><p>⭐ Очки: ${currentUser.points}</p><p>✅ Решено: ${currentUser.solved.length}</p><p>📊 Рейтинг: ${currentUser.rating}</p></div>` : '<p style="text-align:center; padding:40px;">🔒 Войдите, чтобы решать задачи!</p>'}
+            ${currentUser ? `<div class="stat-card"><h3>👤 Ваш профиль</h3><p>⭐ Очки: ${currentUser.points}</p><p>✅ Решено: ${currentUser.solved.length}</p><p>📊 Рейтинг: ${currentUser.rating}</p></div>` : '<p style="text-align:center; padding:40px;">🔒 <strong>Войдите или зарегистрируйтесь</strong>, чтобы решать задачи!</p>'}
         `;
     }
     
     function renderProblems() {
+        if (!globalData) return;
         const grid = globalData.problems.map(prob => {
             const isSolved = currentUser && currentUser.solved.includes(prob.id);
             return `<div class="problem-card ${isSolved ? 'solved' : ''}" onclick="selectProblem(${prob.id})">
                         <div><strong>${prob.title}</strong> <span style="float:right;">${prob.points} pts</span></div>
                         <div class="difficulty ${prob.difficulty}">${prob.difficulty === 'easy' ? 'Легкая' : prob.difficulty === 'medium' ? 'Средняя' : 'Сложная'}</div>
-                        ${isSolved ? '<i class="fas fa-check-circle" style="color:#2ecc71;"></i> Решено' : ''}
+                        ${isSolved ? '<i class="fas fa-check-circle" style="color:#27ae60;"></i> Решено' : ''}
                     </div>`;
         }).join('');
         document.getElementById('problemsContent').innerHTML = `
@@ -225,55 +567,117 @@
             <div class="problem-grid">${grid}</div>
             <div class="editor-panel" id="editorPanel" style="display:none;">
                 <h3 id="selectedProblemTitle"></h3>
-                <div id="problemDescription"></div>
-                <textarea id="codeEditor" rows="10" placeholder="Напишите решение..."></textarea>
-                <button class="btn-run" onclick="runCode()">▶ Запустить</button>
-                <button class="btn-submit" onclick="submitSolution()">📤 Отправить</button>
+                <div class="problem-description" id="problemDescription"></div>
+                <textarea id="codeEditor" rows="12" placeholder="Напишите решение на Python..."></textarea>
+                <button class="btn-run" onclick="runCode()"><i class="fas fa-play"></i> Запустить</button>
+                <button class="btn-submit" onclick="submitSolution()"><i class="fas fa-paper-plane"></i> Отправить</button>
                 <div id="codeResult"></div>
             </div>
         `;
     }
     
     function selectProblem(id) {
-        if (!currentUser) { alert("Войдите в аккаунт!"); return; }
+        if (!currentUser) { alert("Войдите в аккаунт, чтобы решать задачи!"); return; }
         selectedProblem = globalData.problems.find(p => p.id === id);
         document.getElementById('editorPanel').style.display = 'block';
         document.getElementById('selectedProblemTitle').innerHTML = selectedProblem.title;
-        document.getElementById('problemDescription').innerHTML = `<p>${selectedProblem.description}</p><strong>Пример ввода:</strong><br><pre>${selectedProblem.testInput}</pre><strong>Пример вывода:</strong><br><pre>${selectedProblem.expectedOutput}</pre>`;
-        document.getElementById('codeEditor').value = `# Решение задачи ${selectedProblem.title}\n\nprint(sum(map(int, input().split())))`;
+        document.getElementById('problemDescription').innerHTML = `
+            <p>${selectedProblem.description}</p>
+            <strong>📥 Пример ввода:</strong><br><pre>${selectedProblem.testInput}</pre>
+            <strong>📤 Пример вывода:</strong><br><pre>${selectedProblem.expectedOutput}</pre>
+        `;
+        document.getElementById('codeEditor').value = `# Решение задачи ${selectedProblem.title}\n\ndef solve():\n    data = input()\n    # Ваш код здесь\n    print(data)\n\nif __name__ == "__main__":\n    solve()`;
         document.getElementById('codeResult').innerHTML = '';
     }
     
-    function runCode() { document.getElementById('codeResult').innerHTML = '<span style="color:#3498db;">✅ Тест пройден!</span>'; }
+    function runCode() {
+        document.getElementById('codeResult').innerHTML = '<span style="color:#3498db;"><i class="fas fa-spinner fa-spin"></i> Проверка...</span>';
+        setTimeout(() => {
+            document.getElementById('codeResult').innerHTML = '<span style="color:#27ae60;">✅ Тест пройден! Решение готово к отправке.</span>';
+        }, 800);
+    }
     
     async function submitSolution() {
         if (!selectedProblem || !currentUser) return;
+        
         const isCorrect = Math.random() > 0.3;
+        
         if (isCorrect && !currentUser.solved.includes(selectedProblem.id)) {
             currentUser.solved.push(selectedProblem.id);
             currentUser.points += selectedProblem.points;
+            currentUser.rating += Math.floor(selectedProblem.points / 2);
+            
             const idx = globalData.users.findIndex(u => u.id === currentUser.id);
-            if (idx !== -1) { globalData.users[idx].points = currentUser.points; globalData.users[idx].solved = currentUser.solved; }
-            globalData.submissions.push({ username: currentUser.username, problemId: selectedProblem.id, timestamp: new Date() });
+            if (idx !== -1) {
+                globalData.users[idx].points = currentUser.points;
+                globalData.users[idx].solved = currentUser.solved;
+                globalData.users[idx].rating = currentUser.rating;
+            }
+            
+            globalData.submissions.push({
+                username: currentUser.name,
+                email: currentUser.email,
+                problemId: selectedProblem.id,
+                status: 'accepted',
+                points: selectedProblem.points,
+                timestamp: new Date().toISOString()
+            });
+            
             await saveGlobalData();
-            document.getElementById('codeResult').innerHTML = `<span style="color:#2ecc71;">✅ Решение принято! +${selectedProblem.points} очков</span>`;
+            document.getElementById('codeResult').innerHTML = `<span style="color:#27ae60;">✅ Решение принято! +${selectedProblem.points} очков</span>`;
             renderAll();
-        } else { document.getElementById('codeResult').innerHTML = '<span style="color:#e74c3c;">❌ Неправильный ответ!</span>'; }
+        } else {
+            document.getElementById('codeResult').innerHTML = '<span style="color:#e74c3c;">❌ Неправильный ответ. Попробуйте ещё раз!</span>';
+        }
     }
     
     function renderRating() {
+        if (!globalData) return;
         const sorted = [...globalData.users].sort((a,b) => b.points - a.points);
-        document.getElementById('ratingContent').innerHTML = `<h1>🏆 Таблица лидеров</h1><div class="rank-table"><div class="rank-row header"><div>#</div><div>Пользователь</div><div>Очки</div><div>Решено</div></div>${sorted.map((u,i)=>`<div class="rank-row"><div>${i+1}</div><div><i class="fas fa-user"></i> ${u.username}</div><div>${u.points}</div><div>${u.solved.length}</div></div>`).join('')}</div>`;
+        document.getElementById('ratingContent').innerHTML = `
+            <h1>🏆 Таблица лидеров</h1>
+            <div class="rank-table">
+                <div class="rank-row header">
+                    <div>#</div><div>Пользователь</div><div>Очки</div><div>Решено</div>
+                </div>
+                ${sorted.map((u,i) => `<div class="rank-row"><div>${i+1}</div><div><i class="fas fa-user"></i> ${u.name}</div><div><i class="fas fa-star" style="color:#f39c12;"></i> ${u.points}</div><div><i class="fas fa-check-circle" style="color:#27ae60;"></i> ${u.solved.length}</div></div>`).join('')}
+            </div>
+        `;
     }
     
     function renderNews() {
-        document.getElementById('newsContent').innerHTML = `<h1>📰 Новости</h1>${globalData.news.map(n=>`<div class="news-card"><h3>${n.title}</h3><small>${n.date}</small><p>${n.content}</p></div>`).join('')}`;
+        if (!globalData) return;
+        document.getElementById('newsContent').innerHTML = `
+            <h1>📰 Новости платформы</h1>
+            ${globalData.news.map(n => `<div class="news-card"><h3>${n.title}</h3><small>${n.date}</small><p>${n.content}</p></div>`).join('')}
+        `;
     }
     
-    function renderAll() { renderHome(); renderProblems(); renderNews(); renderRating(); }
-    function showPage(p) { document.querySelectorAll('.page').forEach(pg=>pg.classList.remove('active')); document.getElementById(p+'Page').classList.add('active'); if(p=='home') renderHome(); if(p=='rating') renderRating(); if(p=='news') renderNews(); }
+    function renderAll() {
+        renderHome();
+        renderProblems();
+        renderNews();
+        renderRating();
+    }
     
-    (async function() { await loadGlobalData(); await saveGlobalData(); renderAll(); })();
+    function showPage(pageName) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageName + 'Page').classList.add('active');
+        if (pageName === 'home') renderHome();
+        if (pageName === 'rating') renderRating();
+        if (pageName === 'news') renderNews();
+    }
+    
+    // Запуск приложения
+    (async function init() {
+        await loadGlobalData();
+        renderAll();
+        
+        // Если нет пользователя, показываем регистрацию
+        if (!currentUser) {
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+    })();
 </script>
 </body>
 </html>
